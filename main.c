@@ -10,24 +10,25 @@ typedef struct {
 
 word voca[100];
 int word_num = 0;
-// 선택 할 수 있는 번호가 적힌 암기장의 첫 페이지를 재현한 함수 호출
-void first_page() {
-	printf("\n==========영어 단어 암기장==========\n\n");
-
-	printf("0. 첫번째 페이지 호출\n");
-	printf("1. 단어 추가\n");
-	printf("2. 목록 보기\n");
-	printf("3. 파일 저장\n");
-	printf("4. 파일 불러오기\n");
-	printf("5. 종료\n");
-	printf("\n                -1-\n");
-	printf("====================================\n");
+//  명령어 페이지 구현 함수
+void command_page() {
+	printf("\n========== Vocabulary Book ==========\n\n");
+	printf("0. Show Menu\n");
+	printf("1. Add Word\n");
+	printf("2. List Words\n");
+	printf("3. Save File\n");
+	printf("4. Load File\n");
+	printf("5. Search Word\n");
+	printf("6. Delete Word\n");
+	printf("7. Modify Word\n");
+	printf("8. Exit\n");
+	printf("\n====================================\n");
 }
 // 단어 추가 함수
 void voca_add() {
-	printf("\n==========단어 추가 페이지==========\n\n");
+	printf("\n========== Add Words ==========\n\n");
 	int cnt = 0;
-	printf("%d번째 영어 단어 : ", word_num +1);
+	printf("%dst eng word : ", word_num +1);
 	fgets(voca[word_num].eng, 100, stdin);
 	while (voca[word_num].eng[cnt] != '\0') {
 		if (voca[word_num].eng[cnt] == '\n') {
@@ -38,7 +39,7 @@ void voca_add() {
 	}
 	cnt = 0;
 
-	printf("%d번째 한글 뜻 : ", word_num + 1);
+	printf("%dst kor word : ", word_num + 1);
 	fgets(voca[word_num].kor, 100, stdin);
 	while (voca[word_num].kor[cnt] != '\0') {
 		if (voca[word_num].kor[cnt] == '\n') {
@@ -49,31 +50,31 @@ void voca_add() {
 	}
 	word_num++;
 	
-	printf("====================================\n");
+	printf("\n====================================\n");
 }
 // 목록 보여주는 함수
 void voca_list() {
-	printf("\n==============단어  목록===========\n\n");
+	printf("\n============== Word List ===========\n\n");
 	printf("\n");
 	for (int i = 0; i < word_num; i++) {
 		printf("%d. %s   %s\n", i + 1, voca[i].eng, voca[i].kor);
 	}
-	printf("\n                -2-\n");
-	printf("====================================\n");
+	
+	printf("\n====================================\n");
 }
 // 파일에 단어 저장하는 함수
 void file_save() {
 	printf("\n====================================\n");
 
 	if (word_num == 0) {
-		printf("저장할 단어가 없습니다.\n");
+		printf("No word to save.\n");
 		return;
 	}
 
 	FILE* file = fopen("voca_book.txt", "w");
 
 	if (file == NULL) {
-		printf("파일 저장에 실패했습니다.\n");
+		printf("Failed to save file.\n");
 		return;
 	}
 
@@ -81,47 +82,186 @@ void file_save() {
 		fprintf(file, "%s   %s\n", voca[i].eng, voca[i].kor);
 	}
 	fclose(file);
-	printf("파일에 저장되었습니다\n");
+	printf("Saved to file\n");
 	printf("====================================\n");
 }
 // 파일을 불러오는 함수
 void file_load() {
 	printf("\n====================================\n\n");
 
-	printf("파일을 불러오고 있습니다.\n");
+	printf("Loading file.\n");
 
 	FILE* file = fopen("voca_book.txt", "r");
-	int j = 0;
+	char line[200];
+	word_num = 0;
 
 	if (file == NULL) {
-		printf("파일이 없습니다.\n");
+		printf("No file existing\n");
+		return;
+	}
+	
+	while (fgets(line, 200, file) != NULL) {
+		int i = 0;
+		int j = 0;
+
+		while (line[j] != ' ' && line[j] != '\n' && line[j] != '\0') {
+			voca[word_num].eng[i++] = line[j++];
+		}
+		voca[word_num].eng[i] = '\0';
+
+		while (line[j] == ' ') {
+			j++;
+		}
+		i = 0;
+
+		while (line[j] != '\n' && line[j] != '\0') {
+			voca[word_num].kor[i++] = line[j++];
+		}
+		voca[word_num].kor[i] = '\0';
+
+		if (voca[word_num].eng[0] != '\0' && voca[word_num].kor[0] != '\0') {
+			word_num++;
+		}
+	}
+	
+	fclose(file);
+	printf("Loaded file\n");
+	printf("\n====================================\n");
+}
+
+void voca_search() {
+	printf("\n========== Search Word ==========\n\n");
+
+	char search[100];
+	int cnt = 0, find = 0;
+
+	if (word_num == 0) {
+		printf("No words to search");
 		return;
 	}
 
-	for (int i = 0; i < word_num; i++) {
-		fgets(voca[i].eng, 100, file);
-		while (voca[i].eng[j] != '\0') {
-			if (voca[i].eng[j] == '\n') {
-				voca[i].eng[j] = '\0';
-				break;
-			}
-			j++;
-		}
-		j = 0;
+	printf("Enter the word to search : ");
+	fgets(search, 100, stdin);
 
-		fgets(voca[i].kor, 100, file);
-		while (voca[i].kor[j] != '\0') {
-			if (voca[i].kor[j] == '\n') {
-				voca[i].kor[j] = '\0';
-				break;
-			}
-			j++;
+	while (search[cnt] != '\0') {
+		if (search[cnt] == '\n') {
+			search[cnt] = '\0';
+			break;
+		}
+		cnt++;
+	}
+
+	for (int i = 0; i < word_num; i++) {
+		if (strcmp(voca[i].eng, search) == 0) {
+			printf("%s   %s\n", voca[i].eng, voca[i].kor);
+			find = 1;
 		}
 	}
-	fclose(file);
-	printf("파일에서 무사히 불러왔습니다\n");
-	printf("====================================\n");
+	if (find != 1) {
+		printf("No words found\n");
+	}
+
+	printf("\n====================================\n");
 }
+
+void voca_delete() {
+	printf("\n========== Delete Word ==========\n\n");
+	char delete[100];
+	int cnt = 0, save = -1;
+
+	if (word_num == 0) {
+		printf("No words to delete");
+		return;
+	}
+
+	printf("Enter the word to delete : ");
+	fgets(delete, 100, stdin);
+
+	while (delete[cnt] != '\0') {
+		if (delete[cnt] == '\n') {
+			delete[cnt] = '\0';
+			break;
+		}
+		cnt++;
+	}
+
+	for (int i = 0; i < word_num; i++) {
+		if (strcmp(voca[i].eng, delete) == 0) {
+			save = i;
+			break;
+		}
+	}
+	if (save != -1) {
+		for (int i = save; i < word_num - 1; i++) {
+			strcpy(voca[i].eng, voca[i + 1].eng);
+			strcpy(voca[i].kor, voca[i + 1].kor);
+		}
+		printf("Word deleted\n");
+		word_num--;
+	}
+	else {
+		printf("No words found\n");
+	}
+
+	printf("\n====================================\n");
+}
+
+void voca_modify() {
+	printf("\n========== Delete Word ==========\n\n");
+	char modify[100], new_eng[100], new_kor[100];
+	int cnt = 0, save = -1;
+
+	if (word_num == 0) {
+		printf("No words to modify");
+		return;
+	}
+
+	printf("Enter the word to modify : ");
+	fgets(modify, 100, stdin);
+
+	while (modify[cnt] != '\0') {
+		if (modify[cnt] == '\n') {
+			modify[cnt] = '\0';
+		}
+		cnt++;
+	}
+
+	for (int i = 0; i < word_num; i++) {
+		if (strcmp(voca[i].eng, modify) == 0) {
+			save = i;
+			break;
+		}
+	}
+	if (save != -1) {
+		printf("New English Word : ");
+		fgets(new_eng, 100, stdin);
+		cnt = 0;
+		while (new_eng[cnt] != '\0') {
+			if (new_eng[cnt] == '\n') {
+				new_eng[cnt] = '\0';
+			}
+			cnt++;
+		}
+		strcpy(voca[save].eng, new_eng);
+
+		printf("New Korean Word : ");
+		fgets(new_kor, 100, stdin);
+		cnt = 0;
+		while (new_kor[cnt] != '\0') {
+			if (new_kor[cnt] == '\n') {
+				new_kor[cnt] = '\0';
+			}
+			cnt++;
+		}
+		strcpy(voca[save].kor, new_kor);
+	}
+	else {
+		printf("No words found\n");
+	}
+
+	printf("\n====================================\n");
+}
+
 // 입력 버퍼 지우는 함수
 void clear_buffer(){
 	int c;
@@ -132,18 +272,18 @@ void clear_buffer(){
 }
 
 int main(void) {
-	
+	system("chcp 65001 > nul");
 	int choice = 0;
-	first_page();                          // 선택 할 수 있는 번호가 적힌 암기장의 첫 페이지를 재현한 함수 호출
+	command_page();                        // 명령어 페이지 구현 함수
 	
 	while (1) {
-		printf("\n번호 선택 : ");
+		printf("\nSelect Number : ");
 		scanf("%d", &choice);
 		clear_buffer();                   // 입력 버퍼 지우는 함수 호출
 
 		switch (choice) {                 // 번호에 맞는 함수 호출
 		case 0:
-			first_page();
+			command_page();
 			break;
 		case 1:
 			voca_add();
@@ -158,10 +298,19 @@ int main(void) {
 			file_load();
 			break;
 		case 5:
-			printf("\n프로그램 종료\n");
+			voca_search();
+			break;
+		case 6:
+			voca_delete();
+			break;
+		case 7:
+			voca_modify();
+			break;
+		case 8:
+			printf("\nExit Program\n");
 			return 0;
 		default:
-			printf("\n잘못된 선택입니다.\n");
+			printf("\nInvaild choice.\n");
 		}
 	}
 	return 0;

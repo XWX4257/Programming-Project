@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Study\\LProject\\",
+  "WorkspaceRootPath": "C:\\LProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6B68BA26-7961-4B6F-B96A-A047E49D2A38}|Long-term Project.vcxproj|C:\\Study\\LProject\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{6B68BA26-7961-4B6F-B96A-A047E49D2A38}|Long-term Project.vcxproj|C:\\LProject\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6B68BA26-7961-4B6F-B96A-A047E49D2A38}|Long-term Project.vcxproj|solutionrelative:main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -20,11 +20,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.c",
-              "DocumentMoniker": "C:\\Study\\LProject\\main.c",
+              "DocumentMoniker": "C:\\LProject\\main.c",
               "RelativeDocumentMoniker": "main.c",
-              "ToolTip": "C:\\Study\\LProject\\main.c",
+              "ToolTip": "C:\\LProject\\main.c",
               "RelativeToolTip": "main.c",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACQAAAAIAAAA",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIBAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2025-11-08T10:44:54.112Z",
               "EditorCaption": ""
