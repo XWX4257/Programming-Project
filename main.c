@@ -10,6 +10,8 @@ typedef struct {
 
 word voca[100];
 int word_num = 0;
+char wrong_word[100][100];
+int wrong_cnt = 0;
 //  명령어 페이지 구현 함수
 void command_page() {
 	printf("\n========== Vocabulary Book ==========\n\n");
@@ -21,7 +23,9 @@ void command_page() {
 	printf("5. Search Word\n");
 	printf("6. Delete Word\n");
 	printf("7. Modify Word\n");
-	printf("8. Exit\n");
+	printf("8. Quiz\n");
+	printf("9. Note\n");
+	printf("10. Exit\n");
 	printf("\n====================================\n");
 }
 // 단어 추가 함수
@@ -262,6 +266,76 @@ void voca_modify() {
 	printf("\n====================================\n");
 }
 
+void voca_quiz() {
+	printf("\n========== Quiz ==========\n\n");
+	if (word_num == 0) {
+		printf("No words\n");
+		return;
+	}
+	srand(time(NULL));
+	int correct = 0, cnt = 0, i = word_num - 1, j, temp, index;
+	char answer[100];
+	int shuffle[100];
+	wrong_cnt = 0;
+
+	for (int i = 0; i < word_num; i++) {
+		shuffle[i] = i;
+	}
+		
+	while (i > 0) {
+		j = rand() % (i + 1);
+		temp = shuffle[i];
+		shuffle[i] = shuffle[j];
+		shuffle[j] = temp;
+		i--;
+	}
+
+	for (int i = 0; i < word_num; i++) {
+		index = shuffle[i];
+
+		printf("%d. %s : ", i + 1, voca[index].eng);
+		fgets(answer, 100, stdin);
+
+		while (answer[cnt] != '\0') {
+			if (answer[cnt] == '\n') {
+				answer[cnt] = '\0';
+				break;
+			}
+			cnt++;
+		}
+		
+		if (strcmp(answer, voca[index].kor) == 0) {
+			correct++;
+		}
+		else {
+			strcpy(wrong_word[wrong_cnt], voca[index].eng);
+			wrong_cnt++;
+		}
+	}
+	printf("Quiz Result : %d\n", correct);
+
+	printf("\n====================================\n");
+}
+
+void wrong_answer_note() {
+	printf("\n========== Wrong Answer Note ==========\n\n");
+	if (wrong_cnt == 0) {
+		printf("No wrong answers\n");
+		return;
+	}
+	
+	for (int i = 0; i < wrong_cnt; i++) {
+		for (int j = 0; j < word_num; j++) {
+			if (strcmp(wrong_word[i], voca[j].eng) == 0) {
+				printf("%d. %s   %s\n", i+1, voca[j].eng, voca[j].kor);
+				break;
+			}
+		}
+	}
+
+	printf("\n====================================\n");
+}
+
 // 입력 버퍼 지우는 함수
 void clear_buffer(){
 	int c;
@@ -307,6 +381,12 @@ int main(void) {
 			voca_modify();
 			break;
 		case 8:
+			voca_quiz();
+			break;
+		case 9:
+			wrong_answer_note();
+			break;
+		case 10:
 			printf("\nExit Program\n");
 			return 0;
 		default:
